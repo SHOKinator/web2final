@@ -8,21 +8,18 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
-    <h1>Ваше Портфолио</h1>
+    <h1>Portfolio</h1>
 
-    <!-- Кнопка для создания элемента, доступна всем авторизованным -->
     <% if (user) { %>
-        <a href="/portfolio/create"><button class="btn btn-primary">Создать элемент</button></a>
+        <a href="/portfolio/create"><button class="btn btn-primary">Create</button></a>
     <% } %>
 
-    <!-- Отображение элементов портфолио -->
     <ul class="list-unstyled">
         <% portfolioItems.forEach(item => { %>
             <li class="mb-4">
                 <h2><%= item.title %></h2>
                 <p><%= item.description %></p>
 
-                <!-- Карусель изображений -->
                 <div id="carousel<%= item._id %>" class="carousel slide" data-ride="carousel">
                     <div class="carousel-inner">
                         <% item.images.forEach((image, index) => { %>
@@ -41,16 +38,15 @@
                     </a>
                 </div>
 
-                <!-- Кнопки обновления и удаления -->
                 <% if (user.role === 'admin' || user.role === 'editor') { %>
-                    <a href="/portfolio/update/<%= item._id %>"><button class="btn btn-warning">Редактировать</button></a>
+                    <a href="/portfolio/update/<%= item._id %>"><button class="btn btn-warning">Edit</button></a>
                     <form action="/portfolio/delete/<%= item._id %>" method="POST" style="display:inline;">
-                        <button type="submit" class="btn btn-danger">Удалить</button>
+                        <button type="submit" class="btn btn-danger">Delete</button>
                     </form>                    
                 <% } %>
 
                 <% if (user.role !== 'admin' && user.role !== 'editor') { %>
-                    <p>У вас нет прав на редактирование или удаление этого элемента.</p>
+                    <p>You can't edit or delete content.</p>
                 <% } %>
             </li>
         <% }); %>
