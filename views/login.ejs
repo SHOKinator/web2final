@@ -1,0 +1,10 @@
+<%- include('partials/header', { title: 'Вход' }) %>
+<h1>Вход</h1>
+<form id="loginForm">
+    <input type="email" name="email" placeholder="Email" required>
+    <input type="password" name="password" placeholder="Пароль" required>
+    <input type="text" name="twoFactorCode" placeholder="2FA Код (если включено)">
+    <button type="submit">Войти</button>
+</form>
+<p>Еще нет аккаунта? <a href="/register">Регистрация</a></p>
+<%- include('partials/footer') %>
