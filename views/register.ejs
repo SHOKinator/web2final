@@ -1,25 +1,25 @@
-<%- include('partials/header', { title: 'Регистрация' }) %>
-<h1>Регистрация</h1>
+<%- include('partials/header', { title: 'Registration' }) %>
+<h1>Registration</h1>
 <form id="registerForm">
-    <input type="text" name="username" placeholder="Имя пользователя" required>
+    <input type="text" name="username" placeholder="Username" required>
     <input type="email" name="email" placeholder="Email" required>
-    <input type="password" name="password" placeholder="Пароль" required>
-    <input type="text" name="firstName" placeholder="Имя" required>
-    <input type="text" name="lastName" placeholder="Фамилия" required>
-    <input type="number" name="age" placeholder="Возраст" required>
+    <input type="password" name="password" placeholder="Password" required>
+    <input type="text" name="firstName" placeholder="Name" required>
+    <input type="text" name="lastName" placeholder="Surname" required>
+    <input type="number" name="age" placeholder="Age" required>
     <select name="gender" required>
-        <option value="">Выберите пол</option>
-        <option value="male">Мужчина</option>
-        <option value="female">Женщина</option>
+        <option value="">sex</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
     </select>
     <label>
-        <input type="checkbox" name="is2FAEnabled"> Включить 2FA
+        <input type="checkbox" name="is2FAEnabled"> Use 2FA
     </label>
     <select name="role" required>
-        <option value="editor">Редактор</option>
-        <option value="admin">Администратор</option>
+        <option value="editor">Editor</option>
+        <option value="admin">Аdmin</option>
     </select>
-    <button type="submit">Регистрация</button>
+    <button type="submit">Registration</button>
 </form>
-<p>Уже зарегистрированы? <a href="/login">Войти</a></p>
+<p>Already registered? <a href="/login">Login</a></p>
 <%- include('partials/footer') %>
