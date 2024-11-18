@@ -1,0 +1,25 @@
+<%- include('partials/header', { title: 'Регистрация' }) %>
+<h1>Регистрация</h1>
+<form id="registerForm">
+    <input type="text" name="username" placeholder="Имя пользователя" required>
+    <input type="email" name="email" placeholder="Email" required>
+    <input type="password" name="password" placeholder="Пароль" required>
+    <input type="text" name="firstName" placeholder="Имя" required>
+    <input type="text" name="lastName" placeholder="Фамилия" required>
+    <input type="number" name="age" placeholder="Возраст" required>
+    <select name="gender" required>
+        <option value="">Выберите пол</option>
+        <option value="male">Мужчина</option>
+        <option value="female">Женщина</option>
+    </select>
+    <label>
+        <input type="checkbox" name="is2FAEnabled"> Включить 2FA
+    </label>
+    <select name="role" required>
+        <option value="editor">Редактор</option>
+        <option value="admin">Администратор</option>
+    </select>
+    <button type="submit">Регистрация</button>
+</form>
+<p>Уже зарегистрированы? <a href="/login">Войти</a></p>
+<%- include('partials/footer') %>
