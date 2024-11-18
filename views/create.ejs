@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Создать элемент</title>
-    <!-- Для использования карусели, подключим Bootstrap -->
+    <title>Create element</title>
+    
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
-    <h1>Создать элемент портфолио</h1>
+    <h1>Create portfolio element</h1>
 
     <form action="/portfolio" method="POST" enctype="multipart/form-data">
         <label for="title">Title</label>
@@ -18,7 +18,7 @@
         <textarea name="description" id="description" required></textarea>
     
         <label for="images">Images</label>
-        <input type="file" name="images" id="images" multiple required> <!-- multiple для нескольких файлов -->
+        <input type="file" name="images" id="images" multiple required> 
     
         <button type="submit">Создать</button>
     </form>
