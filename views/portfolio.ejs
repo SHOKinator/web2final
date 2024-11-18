@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Портфолио</title>
+    <!-- Для использования карусели, подключим Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <h1>Ваше Портфолио</h1>
+
+    <!-- Кнопка для создания элемента, доступна всем авторизованным -->
+    <% if (user) { %>
+        <a href="/portfolio/create"><button class="btn btn-primary">Создать элемент</button></a>
+    <% } %>
+
+    <!-- Отображение элементов портфолио -->
+    <ul class="list-unstyled">
+        <% portfolioItems.forEach(item => { %>
+            <li class="mb-4">
+                <h2><%= item.title %></h2>
+                <p><%= item.description %></p>
+
+                <!-- Карусель изображений -->
+                <div id="carousel<%= item._id %>" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                        <% item.images.forEach((image, index) => { %>
+                            <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                                <img src="<%= image %>" class="d-block w-100" alt="Image">
+                            </div>
+                        <% }); %>
+                    </div>
+                    <a class="carousel-control-prev" href="#carousel<%= item._id %>" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carousel<%= item._id %>" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+
+                <!-- Кнопки обновления и удаления -->
+                <% if (user.role === 'admin' || user.role === 'editor') { %>
+                    <a href="/portfolio/update/<%= item._id %>"><button class="btn btn-warning">Редактировать</button></a>
+                    <form action="/portfolio/delete/<%= item._id %>" method="POST" style="display:inline;">
+                        <button type="submit" class="btn btn-danger">Удалить</button>
+                    </form>                    
+                <% } %>
+
+                <% if (user.role !== 'admin' && user.role !== 'editor') { %>
+                    <p>У вас нет прав на редактирование или удаление этого элемента.</p>
+                <% } %>
+            </li>
+        <% }); %>
+    </ul>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
