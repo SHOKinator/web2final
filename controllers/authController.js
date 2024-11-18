@@ -5,30 +5,29 @@ const nodemailer = require('nodemailer');
 const speakeasy = require('speakeasy');
 const qrcode = require('qrcode');
 
-// Настройка Nodemailer
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: process.env.EMAIL, // Ваш email
-        pass: process.env.EMAIL_PASSWORD, // Пароль приложения
+        user: process.env.EMAIL, 
+        pass: process.env.EMAIL_PASSWORD, 
     },
 });
 
-// Регистрация пользователя
+
 exports.register = async (req, res) => {
     const { username, email, password, firstName, lastName, age, gender, role, is2FAEnabled } = req.body;
 
     try {
-        // Проверяем наличие пользователя
+        
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).send('Пользователь с таким email уже существует');
         }
 
-        // Преобразование значения is2FAEnabled в Boolean
+       
         const is2FAEnabledBoolean = is2FAEnabled === 'on';
 
-        // Создаем нового пользователя
+        
         const user = new User({
             username,
             email,
@@ -44,59 +43,58 @@ exports.register = async (req, res) => {
         let qrCodeDataURL = null;
 
         if (is2FAEnabledBoolean) {
-            // Генерация секрета для 2FA
+            
             const secret = speakeasy.generateSecret({
-                name: `MyApp (${email})`, // Уникальное название
+                name: `MyApp (${email})`,
             });
             user.twoFactorSecret = secret.base32;
 
-            // Генерация QR-кода для аутентификатора
+            
             qrCodeDataURL = await qrcode.toDataURL(secret.otpauth_url);
-            user.qrCode = qrCodeDataURL; // Сохранение QR-кода в БД
+            user.qrCode = qrCodeDataURL;
         }
 
         await user.save();
 
-        // Отправляем приветственное письмо
+        
         await transporter.sendMail({
             from: process.env.EMAIL,
             to: email,
-            subject: 'Добро пожаловать!',
+            subject: 'Welcome!',
             html: `
                 <h1>Привет, ${firstName}!</h1>
-                <p>Добро пожаловать на платформу!</p>
+                <p>Welcome to the platform!</p>
                 ${is2FAEnabledBoolean ? `
-                    <p>Для включения 2FA отсканируйте QR-код в вашем аутентификаторе:</p>
+                    <p>Scan the QR-code for authentication:</p>
                     <img src="${qrCodeDataURL}" alt="QR Code" style="max-width: 200px;"/>
                 ` : ''}
             `,
         });
 
-        res.status(201).send('Регистрация прошла успешно');
+        res.status(201).send('Registration successful');
     } catch (error) {
         console.error(error);
-        res.status(500).send('Ошибка регистрации');
+        res.status(500).send('Error registration');
     }
 };
 
-// Логин пользователя
 exports.login = async (req, res) => {
     const { email, password, twoFactorCode } = req.body;
 
     try {
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(400).send('Неверный email или пароль');
+            return res.status(400).send('Wrong email or password');
         }
 
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
         if (!isPasswordCorrect) {
-            return res.status(400).send('Неверный email или пароль');
+            return res.status(400).send('Wrong email or password');
         }
 
         if (user.is2FAEnabled) {
             if (!twoFactorCode) {
-                return res.status(400).send('Введите код 2FA');
+                return res.status(400).send('Enter the code 2FA');
             }
 
             const isCodeValid = speakeasy.totp.verify({
@@ -106,7 +104,7 @@ exports.login = async (req, res) => {
             });
 
             if (!isCodeValid) {
-                return res.status(400).send('Неверный код 2FA');
+                return res.status(400).send('Wrong code 2FA');
             }
         }
 
@@ -121,11 +119,11 @@ exports.login = async (req, res) => {
         res.redirect('/portfolio'); 
     } catch (error) {
         console.error(error);
-        res.status(500).send('Ошибка входа');
+        res.status(500).send('Error login');
     }
 };
 
-// Настройка 2FA (для существующего пользователя)
+
 exports.setup2FA = async (req, res) => {
     const userId = req.user.id;
 
@@ -139,12 +137,12 @@ exports.setup2FA = async (req, res) => {
             return res.status(400).send('2FA уже включен');
         }
 
-        // Генерация секрета
+       
         const secret = speakeasy.generateSecret();
         user.twoFactorSecret = secret.base32;
         user.is2FAEnabled = true;
 
-        // Генерация QR-кода
+       
         const qrCodeDataURL = await qrcode.toDataURL(secret.otpauth_url);
         user.qrCode = qrCodeDataURL;
 
