@@ -1,24 +1,23 @@
 const multer = require('multer');
 
-// Настройка для хранения файлов
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'public/uploads'); // Папка для хранения изображений
+        cb(null, 'public/uploads'); 
     },
     filename: (req, file, cb) => {
-        cb(null, Date.now() + '-' + file.originalname); // Имя файла с таймстампом
+        cb(null, Date.now() + '-' + file.originalname); 
     }
 });
 
-// Создаем middleware для загрузки файлов (например, до 3 файлов)
+
 const upload = multer({
     storage,
-    limits: { fileSize: 5 * 1024 * 1024 }, // Максимальный размер файла 5 MB
+    limits: { fileSize: 5 * 1024 * 1024 },
     fileFilter: (req, file, cb) => {
         if (file.mimetype.startsWith('image/')) {
-            cb(null, true); // Если файл изображение, то разрешаем загрузку
+            cb(null, true); 
         } else {
-            cb(new Error('Неверный формат файла'), false);
+            cb(new Error('Wrong format of the file'), false);
         }
     }
 });
